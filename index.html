@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offers Form - Cool Design</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #111;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .title {
+            font-family: 'Roboto Slab', serif;
+            font-size: 4rem;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            opacity: 1;
+            animation: zoomOutMoveUp 3s ease-out forwards;
+        }
+
+        .button {
+            display: none;
+            font-family: 'Roboto Slab', serif;
+            font-size: 1.5rem;
+            color: #fff;
+            background: linear-gradient(45deg, #ff6ec7, #ff9a8b);
+            padding: 15px 30px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            opacity: 0;
+            animation: fadeInButton 2s ease-out forwards;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .offers-container {
+            display: none;
+            margin-top: 20px;
+            color: #fff;
+            font-size: 1.2rem;
+            width: 80%;
+            max-width: 900px;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .offer-card {
+            background-color: #222;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+            display: inline-block;
+            width: 48%;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .offer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .offer-card a {
+            color: #ff9a8b;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: block;
+            margin-top: 10px;
+        }
+
+        .offer-card a:hover {
+            color: #ff6ec7;
+        }
+
+        .verification-message {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1rem;
+            margin-top: 30px;
+            text-align: center;
+            color: #f1c40f;
+            letter-spacing: 1px;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.5);
+            animation: fadeInMessage 3s ease-out forwards;
+        }
+
+        @keyframes fadeInMessage {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes zoomOutMoveUp {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+                transform: translateY(0);
+            }
+            50% {
+                transform: scale(0.8);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(0.8) translateY(-80px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeInButton {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="title">Free AI Images to Video</div>
+    <button class="button">Click Here</button>
+    <div class="offers-container">
+        <h3 class="verification-message">Complete one of these offers to verify your humanity</h3>
+        <div id="offerContainer" style="display: flex; flex-wrap: wrap; justify-content: center;"></div>
+        <p id="verificationMessage" class="verification-message"></p>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script type="text/javascript">
+        document.querySelector('.title').addEventListener('animationend', function() {
+            document.querySelector('.button').style.display = 'inline-block';
+        });
+
+        document.querySelector('.button').addEventListener('click', function() {
+            document.querySelector('.offers-container').style.display = 'block';
+            this.disabled = true;
+            this.innerText = 'Waiting for verification...';
+            fetchOffers();
+        });
+
+        function fetchOffers() {
+            $.getJSON("https://dvwowtnmyluv4.cloudfront.net/public/offers/feed.php?user_id=538458&api_key=16388e91cdf3368db3bfd08d2dfe4ff0&s1=&s2=&callback=?", function(offers) {
+                var html = '';
+                var numOffers = 5;
+                offers = offers.splice(0, numOffers);
+                $.each(offers, function(key, offer) {
+                    html += '<div class="offer-card"><a href="'+offer.url+'" target="_blank" title="'+offer.conversion+'">'+offer.anchor+'</a></div>';
+                });
+                $("#offerContainer").html(html);
+            });
+        }
+
+        setInterval(checkLeads, 15000);
+
+        function checkLeads() {
+            $.getJSON("https://dvwowtnmyluv4.cloudfront.net/public/external/check2.php?testing=0&callback=?", function(leads) {
+                var completed_leads = leads.length;
+                if (completed_leads) {
+                    var offer_ids = [];
+                    var earnings_in_cents = 0;
+                    $.each(leads, function(key, lead) {
+                        offer_ids.push(parseInt(lead.offer_id));
+                        earnings_in_cents += parseFloat(lead.points);
+                    });
+                    console.log("SUMMARY: User has completed " + completed_leads + " leads, for $" + (earnings_in_cents / 100) + " earnings, on offer ids: " + offer_ids.join(","));
+                    document.getElementById("verificationMessage").innerText = "Verification Complete! You have successfully completed the offer(s).";
+                    document.querySelector('.button').disabled = false;
+                    document.querySelector('.button').innerText = "Proceed";
+                } else {
+                    console.log("No leads were found");
+                    document.getElementById("verificationMessage").innerText = "Please complete one of the offers above to verify your humanity.";
+                }
+            });
+        }
+    </script>
+</body>
+</html>
