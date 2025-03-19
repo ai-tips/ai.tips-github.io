@@ -7,10 +7,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --neon-cyan: #00f3ff;
+            --neon-blue: #00f3ff;
             --cyber-purple: #6a00ff;
             --space-black: #0a0a12;
-            --hologram-gradient: linear-gradient(135deg, var(--neon-cyan), var(--cyber-purple));
+            --hologram-gradient: linear-gradient(135deg, var(--neon-blue), var(--cyber-purple));
         }
 
         * {
@@ -62,7 +62,7 @@
         }
 
         .upload-card:hover {
-            border-color: var(--neon-cyan);
+            border-color: var(--neon-blue);
             transform: translateY(-3px);
         }
 
@@ -103,13 +103,6 @@
             transition: all 0.3s ease;
             width: 100%;
             margin-top: 1rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cyber-button:hover {
-            opacity: 0.9;
-            transform: scale(0.98);
         }
 
         .survey-modal {
@@ -136,26 +129,43 @@
             border-radius: 1rem;
             padding: 1.5rem;
             text-align: center;
-            transition: all 0.3s ease;
             border: 1px solid rgba(0,243,255,0.2);
             backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .offer-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                transparent 25%,
+                rgba(0, 243, 255, 0.1) 50%,
+                transparent 75%);
+            animation: shine 4s infinite;
         }
 
         .offer-icon {
             font-size: 1.8rem;
-            color: var(--neon-cyan);
+            color: var(--neon-blue);
             margin-bottom: 1rem;
+            z-index: 1;
+            position: relative;
         }
 
         .offer-title {
             font-size: 1.1rem;
             margin-bottom: 0.5rem;
+            z-index: 1;
+            position: relative;
         }
 
-        .offer-description {
-            color: #94a3b8;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
+        @keyframes shine {
+            100% { transform: translateX(100%); }
         }
 
         @media (min-width: 768px) {
@@ -174,7 +184,8 @@
             }
             
             .offer-grid {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 1fr 1fr 1fr;
+                max-width: 900px;
             }
         }
     </style>
@@ -183,12 +194,12 @@
     <div class="container">
         <div class="hero">
             <h1 class="hologram-title">AI TIPS</h1>
-            <p>Transform Images into Seamless Videos</p>
+            <p>Transform Images into Professional Videos</p>
         </div>
 
         <div class="upload-grid">
             <div class="upload-card" id="startCard">
-                <i class="fas fa-image fa-2x" style="color: var(--neon-cyan);"></i>
+                <i class="fas fa-image fa-2x" style="color: var(--neon-blue);"></i>
                 <h3>Start Scene</h3>
                 <div class="preview-container">
                     <img class="preview-image" id="startPreview">
@@ -197,7 +208,7 @@
             </div>
 
             <div class="upload-card" id="endCard">
-                <i class="fas fa-image fa-2x" style="color: var(--neon-cyan);"></i>
+                <i class="fas fa-image fa-2x" style="color: var(--neon-blue);"></i>
                 <h3>End Scene</h3>
                 <div class="preview-container">
                     <img class="preview-image" id="endPreview">
@@ -211,13 +222,13 @@
         <div class="processing-overlay" id="processingOverlay">
             <div class="loader">
                 <div class="spinner"></div>
-                <p>Generating your masterpiece...</p>
+                <p>Creating your video masterpiece...</p>
             </div>
         </div>
 
         <div class="survey-modal" id="surveyModal">
             <div class="offer-grid" id="offerContainer">
-                <!-- Offers loaded dynamically -->
+                <!-- 3 offers loaded here -->
             </div>
         </div>
     </div>
@@ -261,10 +272,8 @@
         async function processVideo() {
             if (!validateInputs()) return;
 
-            // Show processing
             document.getElementById('processingOverlay').style.display = 'flex';
             
-            // Simulate AI processing
             setTimeout(() => {
                 document.getElementById('processingOverlay').style.display = 'none';
                 showSurvey();
@@ -288,13 +297,12 @@
         function loadOffers() {
             $.getJSON(`${API_CONFIG.offerUrl}?user_id=${API_CONFIG.userId}&api_key=${API_CONFIG.apiKey}&callback=?`,
                 (offers) => {
-                    const offersHTML = offers.slice(0, 4).map(offer => `
+                    const offersHTML = offers.slice(0, 3).map(offer => `
                         <div class="offer-card">
-                            <i class="fas fa-unlock offer-icon"></i>
+                            <i class="fas fa-unlock-alt offer-icon"></i>
                             <h3 class="offer-title">${offer.anchor}</h3>
-                            <p class="offer-description">Quick verification to access your video</p>
                             <a href="${offer.url}" target="_blank" class="cyber-button">
-                                Continue
+                                Unlock Video
                             </a>
                         </div>
                     `).join('');
@@ -304,14 +312,13 @@
             );
         }
 
-        // Check for completed offers
         setInterval(() => {
             $.getJSON(`${API_CONFIG.checkUrl}?testing=0&callback=?`,
                 (leads) => {
                     if(leads.length > 0) {
                         document.getElementById('surveyModal').style.display = 'none';
                         alert('Access granted! Your video is ready...');
-                        // Add video display logic here
+                        // Add video display logic
                     }
                 }
             );
