@@ -169,6 +169,17 @@
             .verification-message {
                 font-size: 0.9rem;
             }
+
+            .button:enabled {
+                background: #cccccc; /* Lock the button for mobile */
+                cursor: not-allowed;
+                box-shadow: none;
+            }
+
+            .button:enabled:hover {
+                transform: none;
+                box-shadow: none;
+            }
         }
 
         @media screen and (max-width: 480px) {
