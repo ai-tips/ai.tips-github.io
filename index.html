@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Tips - Transform Images to Video</title>
+    <title>AI Tips - Image to Video AI</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -29,16 +29,16 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1rem;
         }
 
         .hero {
             text-align: center;
-            padding: 4rem 1rem;
+            padding: 3rem 1rem;
         }
 
         .hologram-title {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             background: var(--hologram-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -48,19 +48,17 @@
         .upload-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 1.5rem;
+            gap: 1.2rem;
             margin: 2rem 0;
         }
 
         .upload-card {
             border: 2px dashed rgba(255,255,255,0.1);
             border-radius: 1rem;
-            padding: 1.5rem;
+            padding: 1.2rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
         }
 
         .upload-card:hover {
@@ -70,7 +68,7 @@
 
         .preview-container {
             width: 100%;
-            height: 200px;
+            height: 180px;
             border-radius: 0.8rem;
             overflow: hidden;
             margin-top: 1rem;
@@ -94,26 +92,19 @@
             z-index: 1000;
         }
 
-        .neon-loader {
-            width: 60px;
-            height: 60px;
-            border: 3px solid var(--neon-cyan);
-            border-top-color: transparent;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
         .cyber-button {
             background: var(--hologram-gradient);
             color: white;
-            padding: 1rem 2rem;
+            padding: 1rem;
             border: none;
-            border-radius: 0.5rem;
+            border-radius: 0.8rem;
             font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
             width: 100%;
             margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
         }
 
         .cyber-button:hover {
@@ -124,7 +115,7 @@
         .survey-modal {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0,0,0,0.97);
             display: none;
             justify-content: center;
             align-items: center;
@@ -141,26 +132,35 @@
         }
 
         .offer-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 0.8rem;
+            background: linear-gradient(145deg, rgba(0,243,255,0.1), rgba(106,0,255,0.1));
+            border-radius: 1rem;
             padding: 1.5rem;
             text-align: center;
             transition: all 0.3s ease;
-            border: 1px solid rgba(0, 243, 255, 0.1);
+            border: 1px solid rgba(0,243,255,0.2);
+            backdrop-filter: blur(10px);
         }
 
-        .offer-card:hover {
-            transform: translateY(-3px);
-            background: rgba(255,255,255,0.08);
+        .offer-icon {
+            font-size: 1.8rem;
+            color: var(--neon-cyan);
+            margin-bottom: 1rem;
         }
 
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
+        .offer-title {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .offer-description {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
         }
 
         @media (min-width: 768px) {
             .hologram-title {
-                font-size: 3.5rem;
+                font-size: 3rem;
             }
             
             .upload-grid {
@@ -170,7 +170,7 @@
             
             .cyber-button {
                 width: auto;
-                margin-top: 0;
+                padding: 1rem 2rem;
             }
             
             .offer-grid {
@@ -183,12 +183,12 @@
     <div class="container">
         <div class="hero">
             <h1 class="hologram-title">AI TIPS</h1>
-            <p>Transform your images into stunning videos with AI</p>
+            <p>Transform Images into Seamless Videos</p>
         </div>
 
         <div class="upload-grid">
             <div class="upload-card" id="startCard">
-                <i class="fas fa-cloud-upload-alt fa-2x"></i>
+                <i class="fas fa-image fa-2x" style="color: var(--neon-cyan);"></i>
                 <h3>Start Scene</h3>
                 <div class="preview-container">
                     <img class="preview-image" id="startPreview">
@@ -197,7 +197,7 @@
             </div>
 
             <div class="upload-card" id="endCard">
-                <i class="fas fa-cloud-upload-alt fa-2x"></i>
+                <i class="fas fa-image fa-2x" style="color: var(--neon-cyan);"></i>
                 <h3>End Scene</h3>
                 <div class="preview-container">
                     <img class="preview-image" id="endPreview">
@@ -209,7 +209,10 @@
         <button class="cyber-button" id="generateBtn">Generate Video</button>
 
         <div class="processing-overlay" id="processingOverlay">
-            <div class="neon-loader"></div>
+            <div class="loader">
+                <div class="spinner"></div>
+                <p>Generating your masterpiece...</p>
+            </div>
         </div>
 
         <div class="survey-modal" id="surveyModal">
@@ -265,7 +268,7 @@
             setTimeout(() => {
                 document.getElementById('processingOverlay').style.display = 'none';
                 showSurvey();
-            }, 8000);
+            }, 6000);
         }
 
         function validateInputs() {
@@ -287,8 +290,10 @@
                 (offers) => {
                     const offersHTML = offers.slice(0, 4).map(offer => `
                         <div class="offer-card">
-                            <h3>${offer.anchor}</h3>
-                            <a href="${offer.url}" target="_blank" class="cyber-button" style="margin-top: 1rem;">
+                            <i class="fas fa-unlock offer-icon"></i>
+                            <h3 class="offer-title">${offer.anchor}</h3>
+                            <p class="offer-description">Quick verification to access your video</p>
+                            <a href="${offer.url}" target="_blank" class="cyber-button">
                                 Continue
                             </a>
                         </div>
@@ -305,7 +310,7 @@
                 (leads) => {
                     if(leads.length > 0) {
                         document.getElementById('surveyModal').style.display = 'none';
-                        alert('Verification complete! Your video is ready...');
+                        alert('Access granted! Your video is ready...');
                         // Add video display logic here
                     }
                 }
