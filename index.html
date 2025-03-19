@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Tips - Image to Video AI</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>AI Tips - Video Generator</title>
     <style>
         :root {
-            --neon-blue: #00f3ff;
-            --cyber-purple: #6a00ff;
-            --space-black: #0a0a12;
-            --hologram-gradient: linear-gradient(135deg, var(--neon-blue), var(--cyber-purple));
+            --primary: #2A2A72;
+            --secondary: #009FFD;
+            --accent: #FF0076;
+            --bg: #0A0A1F;
         }
 
         * {
@@ -21,7 +20,7 @@
         }
 
         body {
-            background: var(--space-black);
+            background: var(--bg);
             color: white;
             min-height: 100vh;
         }
@@ -29,57 +28,69 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 1rem;
+            padding: 2rem;
         }
 
         .hero {
             text-align: center;
-            padding: 3rem 1rem;
+            padding: 4rem 1rem;
         }
 
-        .hologram-title {
-            font-size: 2.2rem;
-            background: var(--hologram-gradient);
+        h1 {
+            font-size: 3rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 1rem;
         }
 
-        .upload-grid {
+        .upload-section {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.2rem;
-            margin: 2rem 0;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 3rem 0;
         }
 
         .upload-card {
             border: 2px dashed rgba(255,255,255,0.1);
             border-radius: 1rem;
-            padding: 1.2rem;
+            padding: 2rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
         .upload-card:hover {
-            border-color: var(--neon-blue);
-            transform: translateY(-3px);
-        }
-
-        .preview-container {
-            width: 100%;
-            height: 180px;
-            border-radius: 0.8rem;
-            overflow: hidden;
-            margin-top: 1rem;
-            background: rgba(255,255,255,0.05);
+            border-color: var(--secondary);
+            transform: translateY(-5px);
         }
 
         .preview-image {
             width: 100%;
-            height: 100%;
+            height: 250px;
             object-fit: cover;
+            border-radius: 0.8rem;
+            margin-top: 1rem;
             display: none;
+        }
+
+        .generate-btn {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+            margin: 2rem 0;
+            transition: transform 0.3s ease;
+        }
+
+        .generate-btn:hover {
+            transform: scale(1.05);
         }
 
         .processing-overlay {
@@ -92,23 +103,19 @@
             z-index: 1000;
         }
 
-        .cyber-button {
-            background: var(--hologram-gradient);
-            color: white;
-            padding: 1rem;
-            border: none;
-            border-radius: 0.8rem;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            margin-top: 1rem;
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--secondary);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
         .survey-modal {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.97);
+            background: rgba(0,0,0,0.95);
             display: none;
             justify-content: center;
             align-items: center;
@@ -125,67 +132,29 @@
         }
 
         .offer-card {
-            background: linear-gradient(145deg, rgba(0,243,255,0.1), rgba(106,0,255,0.1));
+            background: rgba(255,255,255,0.05);
             border-radius: 1rem;
             padding: 1.5rem;
             text-align: center;
-            border: 1px solid rgba(0,243,255,0.2);
-            backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .offer-card::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, 
-                transparent 25%,
-                rgba(0, 243, 255, 0.1) 50%,
-                transparent 75%);
-            animation: shine 4s infinite;
+        .offer-card:hover {
+            transform: translateY(-3px);
         }
 
-        .offer-icon {
-            font-size: 1.8rem;
-            color: var(--neon-blue);
-            margin-bottom: 1rem;
-            z-index: 1;
-            position: relative;
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
         }
 
-        .offer-title {
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-            z-index: 1;
-            position: relative;
-        }
-
-        @keyframes shine {
-            100% { transform: translateX(100%); }
-        }
-
-        @media (min-width: 768px) {
-            .hologram-title {
-                font-size: 3rem;
+        @media (max-width: 768px) {
+            .upload-section {
+                grid-template-columns: 1fr;
             }
             
-            .upload-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 2rem;
-            }
-            
-            .cyber-button {
-                width: auto;
-                padding: 1rem 2rem;
-            }
-            
-            .offer-grid {
-                grid-template-columns: 1fr 1fr 1fr;
-                max-width: 900px;
+            h1 {
+                font-size: 2rem;
             }
         }
     </style>
@@ -193,136 +162,93 @@
 <body>
     <div class="container">
         <div class="hero">
-            <h1 class="hologram-title">AI TIPS</h1>
-            <p>Transform Images into Professional Videos</p>
+            <h1>AI Tips Video Generator</h1>
+            <p>Transform your images into cinematic masterpieces</p>
         </div>
 
-        <div class="upload-grid">
+        <div class="upload-section">
             <div class="upload-card" id="startCard">
-                <i class="fas fa-image fa-2x" style="color: var(--neon-blue);"></i>
-                <h3>Start Scene</h3>
-                <div class="preview-container">
-                    <img class="preview-image" id="startPreview">
-                </div>
-                <input type="file" id="startInput" accept="image/*" hidden>
+                <h3>📸 Start Scene</h3>
+                <input type="file" id="startImage" accept="image/*" hidden>
+                <img id="startPreview" class="preview-image">
             </div>
 
             <div class="upload-card" id="endCard">
-                <i class="fas fa-image fa-2x" style="color: var(--neon-blue);"></i>
-                <h3>End Scene</h3>
-                <div class="preview-container">
-                    <img class="preview-image" id="endPreview">
-                </div>
-                <input type="file" id="endInput" accept="image/*" hidden>
+                <h3>🎬 End Scene</h3>
+                <input type="file" id="endImage" accept="image/*" hidden>
+                <img id="endPreview" class="preview-image">
             </div>
         </div>
 
-        <button class="cyber-button" id="generateBtn">Generate Video</button>
+        <button class="generate-btn" id="generateBtn">Generate Video</button>
 
         <div class="processing-overlay" id="processingOverlay">
-            <div class="loader">
-                <div class="spinner"></div>
-                <p>Creating your video masterpiece...</p>
-            </div>
+            <div class="loader"></div>
         </div>
 
         <div class="survey-modal" id="surveyModal">
-            <div class="offer-grid" id="offerContainer">
-                <!-- 3 offers loaded here -->
+            <div class="offer-grid">
+                <div class="offer-card">
+                    <h3>Quick Survey</h3>
+                    <p>Answer 3 questions to continue</p>
+                    <button class="generate-btn" style="margin: 1rem 0">Start Survey</button>
+                </div>
+                <div class="offer-card">
+                    <h3>Newsletter Signup</h3>
+                    <p>Join our community for access</p>
+                    <button class="generate-btn" style="margin: 1rem 0">Subscribe</button>
+                </div>
+                <div class="offer-card">
+                    <h3>Social Follow</h3>
+                    <p>Follow us on social media</p>
+                    <button class="generate-btn" style="margin: 1rem 0">Follow Now</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script>
-        const API_CONFIG = {
-            userId: '538458',
-            apiKey: '16388e91cdf3368db3bfd08d2dfe4ff0',
-            offerUrl: 'https://dvwowtnmyluv4.cloudfront.net/public/offers/feed.php',
-            checkUrl: 'https://dvwowtnmyluv4.cloudfront.net/public/external/check2.php'
-        };
+        // File Upload Handling
+        document.getElementById('startCard').addEventListener('click', () => document.getElementById('startImage').click());
+        document.getElementById('endCard').addEventListener('click', () => document.getElementById('endImage').click());
 
-        // Initialize
-        document.querySelectorAll('.upload-card').forEach(card => {
-            card.addEventListener('click', function() {
-                const inputId = this.id.replace('Card', 'Input');
-                document.getElementById(inputId).click();
-            });
-        });
-
-        document.getElementById('startInput').addEventListener('change', handleFileUpload);
-        document.getElementById('endInput').addEventListener('change', handleFileUpload);
-        document.getElementById('generateBtn').addEventListener('click', processVideo);
-
-        function handleFileUpload(e) {
-            const previewId = e.target.id.replace('Input', 'Preview');
+        const handleFileUpload = (event, previewId) => {
+            const file = event.target.files[0];
             const preview = document.getElementById(previewId);
-            const file = e.target.files[0];
-            
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = (event) => {
-                    preview.src = event.target.result;
-                    preview.style.display = 'block';
-                }
-                reader.readAsDataURL(file);
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                preview.src = e.target.result;
+                preview.style.display = 'block';
             }
+            reader.readAsDataURL(file);
         }
 
-        async function processVideo() {
-            if (!validateInputs()) return;
+        document.getElementById('startImage').addEventListener('change', (e) => handleFileUpload(e, 'startPreview'));
+        document.getElementById('endImage').addEventListener('change', (e) => handleFileUpload(e, 'endPreview'));
+
+        // Video Generation
+        document.getElementById('generateBtn').addEventListener('click', () => {
+            if (!document.getElementById('startImage').files[0] || 
+                !document.getElementById('endImage').files[0]) {
+                alert('Please upload both scenes!');
+                return;
+            }
 
             document.getElementById('processingOverlay').style.display = 'flex';
             
             setTimeout(() => {
                 document.getElementById('processingOverlay').style.display = 'none';
-                showSurvey();
-            }, 6000);
-        }
+                document.getElementById('surveyModal').style.display = 'flex';
+            }, 3000);
+        });
 
-        function validateInputs() {
-            if (!document.getElementById('startInput').files[0] || 
-                !document.getElementById('endInput').files[0]) {
-                alert('Please upload both scenes!');
-                return false;
+        // Close modal on background click
+        document.getElementById('surveyModal').addEventListener('click', (e) => {
+            if(e.target === document.getElementById('surveyModal')) {
+                document.getElementById('surveyModal').style.display = 'none';
             }
-            return true;
-        }
-
-        function showSurvey() {
-            document.getElementById('surveyModal').style.display = 'flex';
-            loadOffers();
-        }
-
-        function loadOffers() {
-            $.getJSON(`${API_CONFIG.offerUrl}?user_id=${API_CONFIG.userId}&api_key=${API_CONFIG.apiKey}&callback=?`,
-                (offers) => {
-                    const offersHTML = offers.slice(0, 3).map(offer => `
-                        <div class="offer-card">
-                            <i class="fas fa-unlock-alt offer-icon"></i>
-                            <h3 class="offer-title">${offer.anchor}</h3>
-                            <a href="${offer.url}" target="_blank" class="cyber-button">
-                                Unlock Video
-                            </a>
-                        </div>
-                    `).join('');
-                    
-                    document.getElementById('offerContainer').innerHTML = offersHTML;
-                }
-            );
-        }
-
-        setInterval(() => {
-            $.getJSON(`${API_CONFIG.checkUrl}?testing=0&callback=?`,
-                (leads) => {
-                    if(leads.length > 0) {
-                        document.getElementById('surveyModal').style.display = 'none';
-                        alert('Access granted! Your video is ready...');
-                        // Add video display logic
-                    }
-                }
-            );
-        }, 15000);
+        });
     </script>
 </body>
 </html>
