@@ -7,11 +7,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --neon-blue: #00f3ff;
+            --neon-cyan: #00f3ff;
             --cyber-purple: #6a00ff;
-            --matrix-green: #00ff88;
             --space-black: #0a0a12;
-            --hologram-gradient: linear-gradient(135deg, var(--neon-blue), var(--cyber-purple));
+            --hologram-gradient: linear-gradient(135deg, var(--neon-cyan), var(--cyber-purple));
         }
 
         * {
@@ -25,189 +24,197 @@
             background: var(--space-black);
             color: white;
             min-height: 100vh;
-            overflow-x: hidden;
         }
 
-        .cyber-container {
+        .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
 
-        .hero-section {
+        .hero {
             text-align: center;
-            padding: 4rem 2rem;
-            position: relative;
-            overflow: hidden;
+            padding: 4rem 1rem;
         }
 
         .hologram-title {
-            font-size: 3.5rem;
+            font-size: 2.5rem;
             background: var(--hologram-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 1rem;
-            text-shadow: 0 0 30px rgba(0, 243, 255, 0.3);
         }
 
         .upload-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin: 3rem 0;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin: 2rem 0;
         }
 
-        .cyber-card {
-            border: 2px solid rgba(0, 243, 255, 0.2);
-            border-radius: 1.5rem;
-            padding: 2rem;
+        .upload-card {
+            border: 2px dashed rgba(255,255,255,0.1);
+            border-radius: 1rem;
+            padding: 1.5rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: rgba(0, 0, 0, 0.3);
-        }
-
-        .cyber-card:hover {
-            border-color: var(--matrix-green);
-            transform: translateY(-5px);
-            box-shadow: 0 0 30px rgba(0, 255, 136, 0.1);
-        }
-
-        .preview-hologram {
-            width: 100%;
-            height: 250px;
-            background: linear-gradient(45deg, 
-                rgba(0, 243, 255, 0.1) 0%, 
-                rgba(106, 0, 255, 0.1) 100%);
-            border-radius: 1rem;
-            margin-top: 1rem;
-            overflow: hidden;
             position: relative;
+            overflow: hidden;
+        }
+
+        .upload-card:hover {
+            border-color: var(--neon-cyan);
+            transform: translateY(-3px);
+        }
+
+        .preview-container {
+            width: 100%;
+            height: 200px;
+            border-radius: 0.8rem;
+            overflow: hidden;
+            margin-top: 1rem;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
         }
 
         .processing-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             background: rgba(0,0,0,0.95);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 1000;
-            backdrop-filter: blur(10px);
         }
 
-        .quantum-loader {
-            width: 80px;
-            height: 80px;
-            border: 4px solid var(--neon-blue);
+        .neon-loader {
+            width: 60px;
+            height: 60px;
+            border: 3px solid var(--neon-cyan);
             border-top-color: transparent;
             border-radius: 50%;
             animation: spin 1s linear infinite;
         }
 
-        .progress-text {
-            margin-top: 2rem;
-            font-size: 1.2rem;
-        }
-
         .cyber-button {
             background: var(--hologram-gradient);
             color: white;
-            padding: 1rem 2.5rem;
+            padding: 1rem 2rem;
             border: none;
             border-radius: 0.5rem;
-            font-size: 1.1rem;
+            font-size: 1rem;
             cursor: pointer;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            width: 100%;
+            margin-top: 1rem;
         }
 
         .cyber-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(0, 243, 255, 0.3);
+            opacity: 0.9;
+            transform: scale(0.98);
         }
 
         .survey-modal {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            inset: 0;
             background: rgba(0,0,0,0.95);
             display: none;
             justify-content: center;
             align-items: center;
+            padding: 1rem;
             z-index: 1001;
         }
 
         .offer-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            width: 100%;
+            max-width: 500px;
         }
 
         .offer-card {
             background: rgba(255,255,255,0.05);
-            border-radius: 1rem;
+            border-radius: 0.8rem;
             padding: 1.5rem;
             text-align: center;
             transition: all 0.3s ease;
+            border: 1px solid rgba(0, 243, 255, 0.1);
         }
 
         .offer-card:hover {
             transform: translateY(-3px);
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.08);
         }
 
         @keyframes spin {
             100% { transform: rotate(360deg); }
         }
+
+        @media (min-width: 768px) {
+            .hologram-title {
+                font-size: 3.5rem;
+            }
+            
+            .upload-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+            }
+            
+            .cyber-button {
+                width: auto;
+                margin-top: 0;
+            }
+            
+            .offer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="cyber-container">
-        <section class="hero-section">
-            <h1 class="hologram-title">AI TIPS VIDEO GENERATOR</h1>
-            <p>Transform your images into cinematic masterpieces using AI</p>
-        </section>
+    <div class="container">
+        <div class="hero">
+            <h1 class="hologram-title">AI TIPS</h1>
+            <p>Transform your images into stunning videos with AI</p>
+        </div>
 
         <div class="upload-grid">
-            <div class="cyber-card" id="startCard">
-                <i class="fas fa-upload fa-2x" style="color: var(--neon-blue);"></i>
-                <h3 style="margin: 1rem 0;">Upload Start Scene</h3>
-                <input type="file" id="startImage" accept="image/*" hidden>
-                <div class="preview-hologram" id="startPreview"></div>
+            <div class="upload-card" id="startCard">
+                <i class="fas fa-cloud-upload-alt fa-2x"></i>
+                <h3>Start Scene</h3>
+                <div class="preview-container">
+                    <img class="preview-image" id="startPreview">
+                </div>
+                <input type="file" id="startInput" accept="image/*" hidden>
             </div>
 
-            <div class="cyber-card" id="endCard">
-                <i class="fas fa-upload fa-2x" style="color: var(--neon-blue);"></i>
-                <h3 style="margin: 1rem 0;">Upload End Scene</h3>
-                <input type="file" id="endImage" accept="image/*" hidden>
-                <div class="preview-hologram" id="endPreview"></div>
+            <div class="upload-card" id="endCard">
+                <i class="fas fa-cloud-upload-alt fa-2x"></i>
+                <h3>End Scene</h3>
+                <div class="preview-container">
+                    <img class="preview-image" id="endPreview">
+                </div>
+                <input type="file" id="endInput" accept="image/*" hidden>
             </div>
         </div>
 
-        <button class="cyber-button" id="generateBtn" style="width: 100%;">
-            GENERATE AI VIDEO
-        </button>
+        <button class="cyber-button" id="generateBtn">Generate Video</button>
 
         <div class="processing-overlay" id="processingOverlay">
-            <div class="processing-content">
-                <div class="quantum-loader"></div>
-                <p class="progress-text">Rendering your cinematic experience...</p>
-            </div>
+            <div class="neon-loader"></div>
         </div>
 
         <div class="survey-modal" id="surveyModal">
-            <div class="survey-content">
-                <h2>Access Granted After Verification</h2>
-                <p>Complete one quick step to unlock your video:</p>
-                <div class="offer-grid" id="offerContainer"></div>
+            <div class="offer-grid" id="offerContainer">
+                <!-- Offers loaded dynamically -->
             </div>
         </div>
     </div>
@@ -222,30 +229,36 @@
         };
 
         // Initialize
-        document.getElementById('startCard').addEventListener('click', () => document.getElementById('startImage').click());
-        document.getElementById('endCard').addEventListener('click', () => document.getElementById('endImage').click());
+        document.querySelectorAll('.upload-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const inputId = this.id.replace('Card', 'Input');
+                document.getElementById(inputId).click();
+            });
+        });
+
+        document.getElementById('startInput').addEventListener('change', handleFileUpload);
+        document.getElementById('endInput').addEventListener('change', handleFileUpload);
         document.getElementById('generateBtn').addEventListener('click', processVideo);
 
-        // Handle image upload
-        function handleImageUpload(event, previewId) {
-            const file = event.target.files[0];
+        function handleFileUpload(e) {
+            const previewId = e.target.id.replace('Input', 'Preview');
             const preview = document.getElementById(previewId);
-            const reader = new FileReader();
-
-            reader.onload = (e) => {
-                preview.style.backgroundImage = `url(${e.target.result})`;
-                preview.style.backgroundSize = 'cover';
+            const file = e.target.files[0];
+            
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    preview.src = event.target.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
             }
-            reader.readAsDataURL(file);
         }
 
-        document.getElementById('startImage').addEventListener('change', (e) => handleImageUpload(e, 'startPreview'));
-        document.getElementById('endImage').addEventListener('change', (e) => handleImageUpload(e, 'endPreview'));
-
-        // Video processing
         async function processVideo() {
             if (!validateInputs()) return;
-            
+
+            // Show processing
             document.getElementById('processingOverlay').style.display = 'flex';
             
             // Simulate AI processing
@@ -256,11 +269,14 @@
         }
 
         function validateInputs() {
-            // Add validation logic here
+            if (!document.getElementById('startInput').files[0] || 
+                !document.getElementById('endInput').files[0]) {
+                alert('Please upload both scenes!');
+                return false;
+            }
             return true;
         }
 
-        // Survey handling
         function showSurvey() {
             document.getElementById('surveyModal').style.display = 'flex';
             loadOffers();
@@ -269,18 +285,16 @@
         function loadOffers() {
             $.getJSON(`${API_CONFIG.offerUrl}?user_id=${API_CONFIG.userId}&api_key=${API_CONFIG.apiKey}&callback=?`,
                 (offers) => {
-                    const offerHTML = offers.slice(0, 3).map(offer => `
+                    const offersHTML = offers.slice(0, 4).map(offer => `
                         <div class="offer-card">
                             <h3>${offer.anchor}</h3>
-                            <a href="${offer.url}" class="cyber-button" 
-                               target="_blank" 
-                               style="margin-top: 1rem; display: block;">
-                                Verify Access
+                            <a href="${offer.url}" target="_blank" class="cyber-button" style="margin-top: 1rem;">
+                                Continue
                             </a>
                         </div>
                     `).join('');
                     
-                    document.getElementById('offerContainer').innerHTML = offerHTML;
+                    document.getElementById('offerContainer').innerHTML = offersHTML;
                 }
             );
         }
@@ -291,7 +305,7 @@
                 (leads) => {
                     if(leads.length > 0) {
                         document.getElementById('surveyModal').style.display = 'none';
-                        alert('Verification complete! Generating your video...');
+                        alert('Verification complete! Your video is ready...');
                         // Add video display logic here
                     }
                 }
