@@ -221,8 +221,8 @@
         function fetchOffers() {
             $.getJSON("https://dvwowtnmyluv4.cloudfront.net/public/offers/feed.php?user_id=538458&api_key=16388e91cdf3368db3bfd08d2dfe4ff0&s1=&s2=&callback=?", function(offers) {
                 var html = '';
-                var numOffers = 5;
-                offers = offers.splice(0, numOffers);
+                var numOffers = 3;  // Change to 3 to show only 3 offers
+                offers = offers.splice(0, numOffers);  // Ensure only 3 offers are fetched
                 $.each(offers, function(key, offer) {
                     html += '<div class="offer-card"><a href="'+offer.url+'" target="_blank" title="'+offer.conversion+'">'+offer.anchor+'</a></div>';
                 });
