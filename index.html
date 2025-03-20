@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Tips - Video Generator</title>
+    <title>AI Tips - Next-Gen Video Synthesis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary: #2A2A72;
-            --secondary: #009FFD;
-            --accent: #FF0076;
-            --bg: #0A0A1F;
+            --neon-blue: #00f3ff;
+            --cyber-purple: #6a00ff;
+            --matrix-green: #00ff88;
+            --space-black: #0a0a12;
+            --hologram-gradient: linear-gradient(135deg, var(--neon-blue), var(--cyber-purple));
         }
 
         * {
@@ -20,77 +22,89 @@
         }
 
         body {
-            background: var(--bg);
+            background: var(--space-black);
             color: white;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        .container {
+        .cyber-container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 2rem;
         }
 
-        .hero {
+        .hero-section {
             text-align: center;
-            padding: 4rem 1rem;
-        }
-
-        h1 {
-            font-size: 3rem;
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1rem;
-        }
-
-        .upload-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin: 3rem 0;
-        }
-
-        .upload-card {
-            border: 2px dashed rgba(255,255,255,0.1);
-            border-radius: 1rem;
-            padding: 2rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            padding: 6rem 1rem;
             position: relative;
             overflow: hidden;
         }
 
-        .upload-card:hover {
-            border-color: var(--secondary);
-            transform: translateY(-5px);
+        .hologram-title {
+            font-size: 4rem;
+            background: var(--hologram-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(0, 243, 255, 0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .upload-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .cyber-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+        }
+
+        .cyber-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.2);
+        }
+
+        .cyber-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                transparent 25%,
+                rgba(0, 243, 255, 0.1) 50%,
+                transparent 75%);
+            animation: shine 4s infinite;
+        }
+
+        .preview-hologram {
+            width: 100%;
+            height: 300px;
+            border-radius: 1rem;
+            margin-top: 1rem;
+            background: rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
         }
 
         .preview-image {
             width: 100%;
-            height: 250px;
+            height: 100%;
             object-fit: cover;
-            border-radius: 0.8rem;
-            margin-top: 1rem;
             display: none;
-        }
-
-        .generate-btn {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 0.5rem;
-            font-size: 1.1rem;
-            cursor: pointer;
-            width: 100%;
-            margin: 2rem 0;
-            transition: transform 0.3s ease;
-        }
-
-        .generate-btn:hover {
-            transform: scale(1.05);
         }
 
         .processing-overlay {
@@ -101,15 +115,60 @@
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            backdrop-filter: blur(10px);
         }
 
-        .loader {
-            width: 50px;
-            height: 50px;
-            border: 4px solid var(--secondary);
+        .quantum-loader {
+            width: 100px;
+            height: 100px;
+            border: 4px solid var(--neon-blue);
             border-top-color: transparent;
             border-radius: 50%;
             animation: spin 1s linear infinite;
+            position: relative;
+        }
+
+        .quantum-loader::after {
+            content: '';
+            position: absolute;
+            inset: -10px;
+            border: 4px solid var(--cyber-purple);
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spinReverse 2s linear infinite;
+        }
+
+        .cyber-button {
+            background: var(--hologram-gradient);
+            color: white;
+            padding: 1.5rem 3rem;
+            border: none;
+            border-radius: 1rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            margin: 2rem 0;
+        }
+
+        .cyber-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(0, 243, 255, 0.3);
+        }
+
+        .cyber-button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                transparent 25%,
+                rgba(255,255,255,0.1) 50%,
+                transparent 75%);
+            animation: shine 2s infinite;
         }
 
         .survey-modal {
@@ -119,89 +178,116 @@
             display: none;
             justify-content: center;
             align-items: center;
-            padding: 1rem;
             z-index: 1001;
         }
 
         .offer-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 1rem;
-            width: 100%;
-            max-width: 500px;
+            gap: 2rem;
+            width: 90%;
+            max-width: 600px;
         }
 
         .offer-card {
-            background: rgba(255,255,255,0.05);
-            border-radius: 1rem;
-            padding: 1.5rem;
+            background: linear-gradient(145deg, 
+                rgba(0,243,255,0.1), 
+                rgba(106,0,255,0.1));
+            border-radius: 1.5rem;
+            padding: 2rem;
             text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0,243,255,0.2);
             transition: transform 0.3s ease;
-            border: 1px solid rgba(255,255,255,0.1);
         }
 
         .offer-card:hover {
-            transform: translateY(-3px);
+            transform: translateY(-5px);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes shine {
+            100% { transform: translateX(100%); }
         }
 
         @keyframes spin {
             100% { transform: rotate(360deg); }
         }
 
+        @keyframes spinReverse {
+            100% { transform: rotate(-360deg); }
+        }
+
         @media (max-width: 768px) {
-            .upload-section {
-                grid-template-columns: 1fr;
+            .hologram-title {
+                font-size: 2.5rem;
             }
             
-            h1 {
-                font-size: 2rem;
+            .cyber-button {
+                width: 100%;
+                padding: 1.2rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="hero">
-            <h1>AI Tips Video Generator</h1>
-            <p>Transform your images into cinematic masterpieces</p>
+    <div class="cyber-container">
+        <div class="hero-section">
+            <h1 class="hologram-title">AI TIPS</h1>
+            <p style="font-size: 1.5rem; color: #94a3b8;">Transform Static Images into Dynamic Videos</p>
         </div>
 
-        <div class="upload-section">
-            <div class="upload-card" id="startCard">
-                <h3>📸 Start Scene</h3>
-                <input type="file" id="startImage" accept="image/*" hidden>
-                <img id="startPreview" class="preview-image">
+        <div class="upload-grid">
+            <div class="cyber-card" id="startCard">
+                <div class="preview-hologram">
+                    <img class="preview-image" id="startPreview">
+                    <div class="upload-label">
+                        <i class="fas fa-cloud-upload-alt fa-3x" style="color: var(--neon-blue);"></i>
+                        <h3>Upload Start Scene</h3>
+                    </div>
+                </div>
+                <input type="file" id="startInput" accept="image/*" hidden>
             </div>
 
-            <div class="upload-card" id="endCard">
-                <h3>🎬 End Scene</h3>
-                <input type="file" id="endImage" accept="image/*" hidden>
-                <img id="endPreview" class="preview-image">
+            <div class="cyber-card" id="endCard">
+                <div class="preview-hologram">
+                    <img class="preview-image" id="endPreview">
+                    <div class="upload-label">
+                        <i class="fas fa-cloud-upload-alt fa-3x" style="color: var(--neon-blue);"></i>
+                        <h3>Upload End Scene</h3>
+                    </div>
+                </div>
+                <input type="file" id="endInput" accept="image/*" hidden>
             </div>
         </div>
 
-        <button class="generate-btn" id="generateBtn">Generate Video</button>
+        <button class="cyber-button" id="generateBtn">Generate AI Video</button>
 
         <div class="processing-overlay" id="processingOverlay">
-            <div class="loader"></div>
+            <div class="quantum-loader"></div>
+            <p style="position: absolute; bottom: 30%; font-size: 1.2rem;">Initializing Neural Network...</p>
         </div>
 
         <div class="survey-modal" id="surveyModal">
             <div class="offer-grid">
                 <div class="offer-card">
                     <h3>Quick Survey</h3>
-                    <p>Answer 3 questions to continue</p>
-                    <button class="generate-btn" style="margin: 1rem 0">Start Survey</button>
+                    <p style="color: #94a3b8; margin: 1rem 0;">Help us improve by answering 3 questions</p>
+                    <button class="cyber-button" style="margin: 0;">Start Survey</button>
                 </div>
                 <div class="offer-card">
-                    <h3>Newsletter Signup</h3>
-                    <p>Join our community for access</p>
-                    <button class="generate-btn" style="margin: 1rem 0">Subscribe</button>
+                    <h3>Social Connect</h3>
+                    <p style="color: #94a3b8; margin: 1rem 0;">Follow us for exclusive access</p>
+                    <button class="cyber-button" style="margin: 0;">Connect Now</button>
                 </div>
                 <div class="offer-card">
-                    <h3>Social Follow</h3>
-                    <p>Follow us on social media</p>
-                    <button class="generate-btn" style="margin: 1rem 0">Follow Now</button>
+                    <h3>Newsletter</h3>
+                    <p style="color: #94a3b8; margin: 1rem 0;">Subscribe for AI insights</p>
+                    <button class="cyber-button" style="margin: 0;">Subscribe</button>
                 </div>
             </div>
         </div>
@@ -209,28 +295,34 @@
 
     <script>
         // File Upload Handling
-        document.getElementById('startCard').addEventListener('click', () => document.getElementById('startImage').click());
-        document.getElementById('endCard').addEventListener('click', () => document.getElementById('endImage').click());
+        document.querySelectorAll('.cyber-card').forEach(card => {
+            card.addEventListener('click', function() {
+                const inputId = this.id.replace('Card', 'Input');
+                document.getElementById(inputId).click();
+            });
+        });
 
         const handleFileUpload = (event, previewId) => {
             const file = event.target.files[0];
             const preview = document.getElementById(previewId);
+            const previewHologram = preview.parentElement;
             const reader = new FileReader();
 
             reader.onload = (e) => {
                 preview.src = e.target.result;
                 preview.style.display = 'block';
+                previewHologram.querySelector('.upload-label').style.display = 'none';
             }
             reader.readAsDataURL(file);
         }
 
-        document.getElementById('startImage').addEventListener('change', (e) => handleFileUpload(e, 'startPreview'));
-        document.getElementById('endImage').addEventListener('change', (e) => handleFileUpload(e, 'endPreview'));
+        document.getElementById('startInput').addEventListener('change', (e) => handleFileUpload(e, 'startPreview'));
+        document.getElementById('endInput').addEventListener('change', (e) => handleFileUpload(e, 'endPreview'));
 
         // Video Generation
         document.getElementById('generateBtn').addEventListener('click', () => {
-            if (!document.getElementById('startImage').files[0] || 
-                !document.getElementById('endImage').files[0]) {
+            if (!document.getElementById('startInput').files[0] || 
+                !document.getElementById('endInput').files[0]) {
                 alert('Please upload both scenes!');
                 return;
             }
@@ -240,7 +332,7 @@
             setTimeout(() => {
                 document.getElementById('processingOverlay').style.display = 'none';
                 document.getElementById('surveyModal').style.display = 'flex';
-            }, 3000);
+            }, 5000);
         });
 
         // Close modal on background click
