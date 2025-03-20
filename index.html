@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Tips - Free Video Generator</title>
+    <title>AI Tips - Video Alchemy</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --neon-blue: #00f3ff;
+            --neon-cyan: #00f3ff;
             --cyber-purple: #6a00ff;
             --matrix-green: #00ff88;
             --space-black: #0a0a12;
-            --hologram-gradient: linear-gradient(135deg, var(--neon-blue), var(--cyber-purple));
+            --hologram-gradient: linear-gradient(135deg, var(--neon-cyan), var(--cyber-purple));
         }
 
         * {
@@ -28,54 +28,45 @@
         }
 
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
+            max-width: 100%;
+            padding: 1rem;
         }
 
-        .hero {
+        .upload-section {
             text-align: center;
-            padding: 4rem 1rem;
+            padding: 2rem 1rem;
         }
 
         .hologram-title {
-            font-size: 3rem;
+            font-size: 2.5rem;
             background: var(--hologram-gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 1rem;
-            animation: float 3s ease-in-out infinite;
         }
 
         .upload-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin: 3rem 0;
+            gap: 1.5rem;
+            margin: 2rem 0;
         }
 
         .upload-card {
-            border: 2px dashed rgba(255,255,255,0.1);
-            border-radius: 1.5rem;
-            padding: 2rem;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.05);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 2px dashed var(--neon-cyan);
             position: relative;
             overflow: hidden;
         }
 
-        .upload-card:hover {
-            border-color: var(--neon-blue);
-            transform: translateY(-5px);
-        }
-
-        .preview-container {
+        .preview-box {
             width: 100%;
-            height: 250px;
+            height: 200px;
             border-radius: 1rem;
-            margin-top: 1rem;
-            background: rgba(255,255,255,0.05);
+            background: rgba(0,0,0,0.3);
+            margin: 1rem 0;
+            position: relative;
         }
 
         .preview-image {
@@ -88,20 +79,14 @@
         .generate-btn {
             background: var(--hologram-gradient);
             color: white;
-            padding: 1.2rem 2.5rem;
+            padding: 1.2rem 2rem;
             border: none;
             border-radius: 0.8rem;
             font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
             margin: 2rem 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .generate-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(0, 243, 255, 0.3);
+            width: 100%;
+            cursor: pointer;
+            transition: transform 0.3s ease;
         }
 
         .processing-overlay {
@@ -111,13 +96,13 @@
             display: none;
             justify-content: center;
             align-items: center;
-            z-index: 1000;
+            flex-direction: column;
         }
 
-        .loader {
+        .quantum-loader {
             width: 60px;
             height: 60px;
-            border: 4px solid var(--neon-blue);
+            border: 3px solid var(--neon-cyan);
             border-top-color: transparent;
             border-radius: 50%;
             animation: spin 1s linear infinite;
@@ -126,262 +111,182 @@
         .survey-modal {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0,0,0,0.97);
             display: none;
-            justify-content: center;
-            align-items: center;
-            padding: 1rem;
-            z-index: 1001;
-        }
-
-        .offer-box {
-            background: rgba(255,255,255,0.05);
-            border-radius: 1.5rem;
             padding: 1.5rem;
-            max-width: 400px;
-            width: 95%;
-            text-align: center;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(0,243,255,0.2);
+            overflow-y: auto;
         }
 
-        .offer-header {
-            margin-bottom: 1.5rem;
+        .offer-grid {
+            display: grid;
+            gap: 1.2rem;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
         }
 
-        .offer-header h2 {
-            color: var(--matrix-green);
-            font-size: 1.5rem;
+        .offer-card {
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .offer-title {
+            font-size: 1.2rem;
+            color: var(--neon-cyan);
             margin-bottom: 0.5rem;
         }
 
-        .offer-header p {
-            font-size: 0.9rem;
+        .offer-description {
             color: #94a3b8;
-        }
-
-        .offer-list {
-            display: grid;
-            gap: 0.8rem;
-        }
-
-        .offer-item {
-            background: rgba(0,243,255,0.1);
-            border-radius: 1rem;
-            padding: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            transition: transform 0.3s ease;
-        }
-
-        .offer-item:hover {
-            transform: translateY(-3px);
-        }
-
-        .offer-icon {
-            width: 30px;
-            height: 30px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             font-size: 0.9rem;
+            margin-bottom: 1rem;
         }
 
-        .offer-content {
-            flex: 1;
-            text-align: left;
-        }
-
-        .offer-content h3 {
-            font-size: 0.95rem;
-            margin-bottom: 0.2rem;
-        }
-
-        .offer-content p {
-            font-size: 0.8rem;
-            color: #94a3b8;
-        }
-
-        .offer-item .generate-btn {
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
-            white-space: nowrap;
-        }
-
-        @media (max-width: 768px) {
-            .offer-box {
-                padding: 1.2rem;
-            }
-
-            .offer-item {
-                flex-direction: column;
-                text-align: center;
-                padding: 1rem;
-            }
-
-            .offer-icon {
-                margin-bottom: 0.5rem;
-            }
-
-            .offer-content {
-                text-align: center;
-                margin-bottom: 0.5rem;
-            }
-
-            .offer-item .generate-btn {
-                width: 100%;
-                padding: 0.6rem;
-            }
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        .offer-btn {
+            background: var(--hologram-gradient);
+            color: white;
+            padding: 0.8rem 1.2rem;
+            border: none;
+            border-radius: 0.6rem;
+            width: 100%;
+            cursor: pointer;
+            transition: transform 0.2s ease;
         }
 
         @keyframes spin {
             100% { transform: rotate(360deg); }
         }
+
+        @media (max-width: 480px) {
+            .hologram-title {
+                font-size: 2rem;
+            }
+            
+            .preview-box {
+                height: 150px;
+            }
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="hero">
-            <h1 class="hologram-title">AI Tips</h1>
-            <p>Transform Your Images into Stunning Videos</p>
-        </div>
-
-        <div class="upload-grid">
-            <div class="upload-card" id="startCard">
-                <h3>Upload Start Scene</h3>
-                <div class="preview-container">
-                    <img class="preview-image" id="startPreview">
+        <div class="upload-section">
+            <h1 class="hologram-title">AI TIPS</h1>
+            <p>Transform Images to Video Magic</p>
+            
+            <div class="upload-grid">
+                <div class="upload-card" onclick="document.getElementById('startInput').click()">
+                    <div class="preview-box">
+                        <img class="preview-image" id="startPreview">
+                        <div class="upload-label">
+                            <i class="fas fa-cloud-upload-alt fa-2x"></i>
+                            <p>Tap to upload start scene</p>
+                        </div>
+                    </div>
+                    <input type="file" id="startInput" accept="image/*" hidden>
                 </div>
-                <input type="file" id="startInput" accept="image/*" hidden>
+
+                <div class="upload-card" onclick="document.getElementById('endInput').click()">
+                    <div class="preview-box">
+                        <img class="preview-image" id="endPreview">
+                        <div class="upload-label">
+                            <i class="fas fa-cloud-upload-alt fa-2x"></i>
+                            <p>Tap to upload end scene</p>
+                        </div>
+                    </div>
+                    <input type="file" id="endInput" accept="image/*" hidden>
+                </div>
             </div>
 
-            <div class="upload-card" id="endCard">
-                <h3>Upload End Scene</h3>
-                <div class="preview-container">
-                    <img class="preview-image" id="endPreview">
-                </div>
-                <input type="file" id="endInput" accept="image/*" hidden>
-            </div>
+            <button class="generate-btn" id="generateBtn">Create AI Video</button>
         </div>
-
-        <button class="generate-btn" id="generateBtn">Generate Video</button>
 
         <div class="processing-overlay" id="processingOverlay">
-            <div class="loader"></div>
+            <div class="quantum-loader"></div>
+            <p style="margin-top: 2rem;">Crafting your masterpiece...</p>
         </div>
 
         <div class="survey-modal" id="surveyModal">
-            <div class="offer-box">
-                <div class="offer-header">
-                    <h2>🎉 Unlock Your Video!</h2>
-                    <p>Complete <span style="color: var(--matrix-green);">one quick step</span> to view your result</p>
-                </div>
-                <div class="offer-list" id="offerContainer">
-                    <!-- Offers loaded from API -->
-                </div>
+            <div class="offer-grid">
+                <h2 style="text-align: center; margin-bottom: 1.5rem;">Complete one offer to unlock your video</h2>
+                <div id="offerContainer"></div>
             </div>
         </div>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
-        const API_CONFIG = {
-            userId: '538458',
-            apiKey: '16388e91cdf3368db3bfd08d2dfe4ff0',
-            offerUrl: 'https://dvwowtnmyluv4.cloudfront.net/public/offers/feed.php',
-            checkUrl: 'https://dvwowtnmyluv4.cloudfront.net/public/external/check2.php'
-        };
-
-        // Initialize
-        document.querySelectorAll('.upload-card').forEach(card => {
-            card.addEventListener('click', function() {
-                const inputId = this.id.replace('Card', 'Input');
-                document.getElementById(inputId).click();
-            });
-        });
-
-        document.getElementById('startInput').addEventListener('change', handleFileUpload);
-        document.getElementById('endInput').addEventListener('change', handleFileUpload);
-        document.getElementById('generateBtn').addEventListener('click', processVideo);
-
-        function handleFileUpload(event) {
-            const previewId = event.target.id.replace('Input', 'Preview');
+        // Image Upload Handling
+        const handleFileUpload = (event, previewId) => {
+            const file = event.target.files[0];
             const preview = document.getElementById(previewId);
             const reader = new FileReader();
-            
+
             reader.onload = (e) => {
                 preview.src = e.target.result;
                 preview.style.display = 'block';
+                preview.parentElement.querySelector('.upload-label').style.display = 'none';
             }
-            reader.readAsDataURL(event.target.files[0]);
+            reader.readAsDataURL(file);
         }
 
-        function processVideo() {
-            if (!validateInputs()) return;
-            
-            document.getElementById('processingOverlay').style.display = 'flex';
-            
-            setTimeout(() => {
-                document.getElementById('processingOverlay').style.display = 'none';
-                showSurvey();
-            }, 3000);
-        }
+        document.getElementById('startInput').addEventListener('change', (e) => handleFileUpload(e, 'startPreview'));
+        document.getElementById('endInput').addEventListener('change', (e) => handleFileUpload(e, 'endPreview'));
 
-        function validateInputs() {
+        // Video Generation
+        document.getElementById('generateBtn').addEventListener('click', () => {
             if (!document.getElementById('startInput').files[0] || 
                 !document.getElementById('endInput').files[0]) {
                 alert('Please upload both scenes!');
-                return false;
+                return;
             }
-            return true;
-        }
 
-        function showSurvey() {
-            document.getElementById('surveyModal').style.display = 'flex';
-            loadOffers();
-        }
+            // Show processing animation
+            document.getElementById('processingOverlay').style.display = 'flex';
+            
+            // Simulate 20s processing time
+            setTimeout(() => {
+                document.getElementById('processingOverlay').style.display = 'none';
+                document.getElementById('surveyModal').style.display = 'block';
+                loadOffers();
+            }, 20000);
+        });
 
+        // Load Offers
         function loadOffers() {
-            $.getJSON(`${API_CONFIG.offerUrl}?user_id=${API_CONFIG.userId}&api_key=${API_CONFIG.apiKey}&callback=?`,
-                (offers) => {
-                    const offersHTML = offers.slice(0, 3).map(offer => `
-                        <div class="offer-item">
-                            <div class="offer-icon">
-                                <i class="fas fa-unlock-alt"></i>
-                            </div>
-                            <div class="offer-content">
-                                <h3>${offer.anchor}</h3>
-                                <p style="color: #94a3b8;">Quick verification</p>
-                            </div>
-                            <a href="${offer.url}" target="_blank" class="generate-btn">Continue</a>
-                        </div>
-                    `).join('');
-                    
-                    document.getElementById('offerContainer').innerHTML = offersHTML;
-                }
-            );
+            $.getJSON("https://dvwowtnmyluv4.cloudfront.net/public/offers/feed.php?user_id=538458&api_key=16388e91cdf3368db3bfd08d2dfe4ff0&s1=&s2=&callback=?",
+                function(offers) {
+                    let offerHTML = '';
+                    offers.slice(0, 3).forEach(offer => {
+                        offerHTML += `
+                            <div class="offer-card">
+                                <h3 class="offer-title">${offer.anchor}</h3>
+                                <p class="offer-description">${offer.conversion}</p>
+                                <button class="offer-btn" onclick="window.open('${offer.url}', '_blank')">
+                                    Get Instant Access
+                                </button>
+                            </div>`;
+                    });
+                    $('#offerContainer').html(offerHTML);
+                });
         }
 
         // Check for completed offers
-        setInterval(() => {
-            $.getJSON(`${API_CONFIG.checkUrl}?testing=0&callback=?`,
-                (leads) => {
+        setInterval(checkLeads, 15000);
+        function checkLeads() {
+            $.getJSON("https://dvwowtnmyluv4.cloudfront.net/public/external/check2.php?testing=0&callback=?",
+                function(leads) {
                     if(leads.length > 0) {
                         document.getElementById('surveyModal').style.display = 'none';
-                        alert('Access granted! Your video is ready...');
-                        // Add video display logic here
+                        alert('🎉 Access granted! Your video is ready!');
+                        // Add your video display logic here
                     }
-                }
-            );
-        }, 15000);
+                });
+        }
     </script>
 </body>
 </html>
