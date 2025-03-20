@@ -255,6 +255,10 @@
                 width: 100%;
                 padding: 1.2rem;
             }
+
+            .survey-modal {
+                display: none !important; /* Hide offers on mobile */
+            }
         }
     </style>
 </head>
@@ -343,8 +347,13 @@
             
             setTimeout(() => {
                 document.getElementById('processingOverlay').style.display = 'none';
-                document.getElementById('surveyModal').style.display = 'flex';
-                loadOffers();
+                // Show offers only on PC
+                if (window.innerWidth > 768) {
+                    document.getElementById('surveyModal').style.display = 'flex';
+                    loadOffers();
+                } else {
+                    alert('Your video is ready! Check your desktop to complete the final step.');
+                }
             }, 5000);
         });
 
