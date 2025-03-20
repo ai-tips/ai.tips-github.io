@@ -137,8 +137,8 @@
         .offer-box {
             background: rgba(255,255,255,0.05);
             border-radius: 1.5rem;
-            padding: 2rem;
-            max-width: 500px;
+            padding: 1.5rem;
+            max-width: 400px;
             width: 95%;
             text-align: center;
             backdrop-filter: blur(10px);
@@ -151,21 +151,27 @@
 
         .offer-header h2 {
             color: var(--matrix-green);
+            font-size: 1.5rem;
             margin-bottom: 0.5rem;
+        }
+
+        .offer-header p {
+            font-size: 0.9rem;
+            color: #94a3b8;
         }
 
         .offer-list {
             display: grid;
-            gap: 1rem;
+            gap: 0.8rem;
         }
 
         .offer-item {
             background: rgba(0,243,255,0.1);
             border-radius: 1rem;
-            padding: 1rem;
+            padding: 0.8rem;
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.8rem;
             transition: transform 0.3s ease;
         }
 
@@ -174,18 +180,61 @@
         }
 
         .offer-icon {
-            width: 40px;
-            height: 40px;
+            width: 30px;
+            height: 30px;
             background: rgba(255,255,255,0.1);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 0.9rem;
         }
 
         .offer-content {
             flex: 1;
             text-align: left;
+        }
+
+        .offer-content h3 {
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .offer-content p {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .offer-item .generate-btn {
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            .offer-box {
+                padding: 1.2rem;
+            }
+
+            .offer-item {
+                flex-direction: column;
+                text-align: center;
+                padding: 1rem;
+            }
+
+            .offer-icon {
+                margin-bottom: 0.5rem;
+            }
+
+            .offer-content {
+                text-align: center;
+                margin-bottom: 0.5rem;
+            }
+
+            .offer-item .generate-btn {
+                width: 100%;
+                padding: 0.6rem;
+            }
         }
 
         @keyframes float {
@@ -195,43 +244,6 @@
 
         @keyframes spin {
             100% { transform: rotate(360deg); }
-        }
-
-        @media (max-width: 768px) {
-            .hologram-title {
-                font-size: 2.2rem;
-            }
-            
-            .upload-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .generate-btn {
-                width: 100%;
-            }
-            
-            .offer-box {
-                padding: 1.5rem;
-            }
-
-            .offer-item {
-                flex-direction: column;
-                text-align: center;
-                padding: 1.5rem;
-            }
-
-            .offer-icon {
-                margin-bottom: 1rem;
-            }
-
-            .offer-content {
-                text-align: center;
-                margin-bottom: 1rem;
-            }
-
-            .offer-item .generate-btn {
-                width: 100%;
-            }
         }
     </style>
 </head>
@@ -347,9 +359,9 @@
                             </div>
                             <div class="offer-content">
                                 <h3>${offer.anchor}</h3>
-                                <p style="color: #94a3b8; font-size: 0.9rem;">Quick verification</p>
+                                <p style="color: #94a3b8;">Quick verification</p>
                             </div>
-                            <a href="${offer.url}" target="_blank" class="generate-btn" style="padding: 0.6rem 1.2rem;">Continue</a>
+                            <a href="${offer.url}" target="_blank" class="generate-btn">Continue</a>
                         </div>
                     `).join('');
                     
