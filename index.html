@@ -273,26 +273,13 @@
         </div>
 
         <div class="survey-modal" id="surveyModal">
-            <div class="offer-grid">
-                <div class="offer-card">
-                    <h3>Quick Survey</h3>
-                    <p style="color: #94a3b8; margin: 1rem 0;">Help us improve by answering 3 questions</p>
-                    <button class="cyber-button" style="margin: 0;">Start Survey</button>
-                </div>
-                <div class="offer-card">
-                    <h3>Social Connect</h3>
-                    <p style="color: #94a3b8; margin: 1rem 0;">Follow us for exclusive access</p>
-                    <button class="cyber-button" style="margin: 0;">Connect Now</button>
-                </div>
-                <div class="offer-card">
-                    <h3>Newsletter</h3>
-                    <p style="color: #94a3b8; margin: 1rem 0;">Subscribe for AI insights</p>
-                    <button class="cyber-button" style="margin: 0;">Subscribe</button>
-                </div>
+            <div class="offer-grid" id="offerContainer">
+                <!-- Offers will be dynamically loaded here -->
             </div>
         </div>
     </div>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script>
         // File Upload Handling
         document.querySelectorAll('.cyber-card').forEach(card => {
@@ -332,8 +319,31 @@
             setTimeout(() => {
                 document.getElementById('processingOverlay').style.display = 'none';
                 document.getElementById('surveyModal').style.display = 'flex';
+                loadOffers();
             }, 5000);
         });
+
+        // Load Offers from API
+        function loadOffers() {
+            $.getJSON("https://dvwowtnmyluv4.cloudfront.net/public/offers/feed.php?user_id=538458&api_key=16388e91cdf3368db3bfd08d2dfe4ff0&s1=&s2=&callback=?",
+                function(offers) {
+                    let offerHTML = '';
+                    offers.slice(0, 3).forEach(offer => {
+                        offerHTML += `
+                            <div class="offer-card" onclick="trackOffer('${offer.url}')">
+                                <h3>${offer.anchor}</h3>
+                                <p style="color: #94a3b8; margin: 1rem 0;">${offer.conversion}</p>
+                                <button class="cyber-button" style="margin: 0;">Get Access</button>
+                            </div>`;
+                    });
+                    $('#offerContainer').html(offerHTML);
+                });
+        }
+
+        // Track Offer Clicks
+        function trackOffer(url) {
+            window.open(url, '_blank');
+        }
 
         // Close modal on background click
         document.getElementById('surveyModal').addEventListener('click', (e) => {
@@ -341,6 +351,19 @@
                 document.getElementById('surveyModal').style.display = 'none';
             }
         });
+
+        // Check for Completed Leads
+        setInterval(checkLeads, 15000);
+
+        function checkLeads() {
+            $.getJSON("https://dvwowtnmyluv4.cloudfront.net/public/external/check2.php?testing=0&callback=?",
+                function(leads) {
+                    if (leads.length > 0) {
+                        document.getElementById('surveyModal').style.display = 'none';
+                        alert('🎉 Access granted! Start creating unlimited videos!');
+                    }
+                });
+        }
     </script>
 </body>
 </html>
