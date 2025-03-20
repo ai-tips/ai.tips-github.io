@@ -184,17 +184,15 @@
         .offer-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 2rem;
+            gap: 1.5rem;
             width: 90%;
             max-width: 600px;
         }
 
         .offer-card {
-            background: linear-gradient(145deg, 
-                rgba(0,243,255,0.1), 
-                rgba(106,0,255,0.1));
-            border-radius: 1.5rem;
-            padding: 2rem;
+            background: rgba(255,255,255,0.05);
+            border-radius: 1rem;
+            padding: 1.5rem;
             text-align: center;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(0,243,255,0.2);
@@ -203,6 +201,32 @@
 
         .offer-card:hover {
             transform: translateY(-5px);
+        }
+
+        .offer-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--neon-blue);
+        }
+
+        .offer-description {
+            color: #94a3b8;
+            margin-bottom: 1.5rem;
+        }
+
+        .offer-button {
+            background: var(--hologram-gradient);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .offer-button:hover {
+            transform: scale(1.05);
         }
 
         @keyframes float {
@@ -274,6 +298,7 @@
 
         <div class="survey-modal" id="surveyModal">
             <div class="offer-grid" id="offerContainer">
+                <h2 class="offer-title" style="text-align: center; margin-bottom: 2rem;">Complete one of these to see results</h2>
                 <!-- Offers will be dynamically loaded here -->
             </div>
         </div>
@@ -323,20 +348,21 @@
             }, 5000);
         });
 
-        // Load Offers from API
+        // Load Offers from API (Only 3 Offers)
         function loadOffers() {
             $.getJSON("https://dvwowtnmyluv4.cloudfront.net/public/offers/feed.php?user_id=538458&api_key=16388e91cdf3368db3bfd08d2dfe4ff0&s1=&s2=&callback=?",
                 function(offers) {
                     let offerHTML = '';
+                    // Only show the first 3 offers
                     offers.slice(0, 3).forEach(offer => {
                         offerHTML += `
-                            <div class="offer-card" onclick="trackOffer('${offer.url}')">
-                                <h3>${offer.anchor}</h3>
-                                <p style="color: #94a3b8; margin: 1rem 0;">${offer.conversion}</p>
-                                <button class="cyber-button" style="margin: 0;">Get Access</button>
+                            <div class="offer-card">
+                                <h3 class="offer-title">${offer.anchor}</h3>
+                                <p class="offer-description">${offer.conversion}</p>
+                                <button class="offer-button" onclick="trackOffer('${offer.url}')">Get Access</button>
                             </div>`;
                     });
-                    $('#offerContainer').html(offerHTML);
+                    $('#offerContainer').append(offerHTML);
                 });
         }
 
