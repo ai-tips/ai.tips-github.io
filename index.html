@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Tips - Lifetime Video Access</title>
+    <title>AI Tips - Free Video Generator</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -213,6 +213,25 @@
             .offer-box {
                 padding: 1.5rem;
             }
+
+            .offer-item {
+                flex-direction: column;
+                text-align: center;
+                padding: 1.5rem;
+            }
+
+            .offer-icon {
+                margin-bottom: 1rem;
+            }
+
+            .offer-content {
+                text-align: center;
+                margin-bottom: 1rem;
+            }
+
+            .offer-item .generate-btn {
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -220,7 +239,7 @@
     <div class="container">
         <div class="hero">
             <h1 class="hologram-title">AI Tips</h1>
-            <p>Transform Images into Lifetime Video Access</p>
+            <p>Transform Your Images into Stunning Videos</p>
         </div>
 
         <div class="upload-grid">
@@ -250,9 +269,8 @@
         <div class="survey-modal" id="surveyModal">
             <div class="offer-box">
                 <div class="offer-header">
-                    <h2>🎉 Unlock Lifetime Access!</h2>
-                    <p>Complete <span style="color: var(--matrix-green);">one quick step</span> to unlock:</p>
-                    <p>• Unlimited video generation<br>• Premium AI features<br>• Priority support</p>
+                    <h2>🎉 Unlock Your Video!</h2>
+                    <p>Complete <span style="color: var(--matrix-green);">one quick step</span> to view your result</p>
                 </div>
                 <div class="offer-list" id="offerContainer">
                     <!-- Offers loaded from API -->
