@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Tips - Video Alchemy</title>
+    <title>AI Tips - Video Synthesis</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --neon-cyan: #00f3ff;
-            --cyber-purple: #6a00ff;
-            --matrix-green: #00ff88;
-            --space-black: #0a0a12;
-            --hologram-gradient: linear-gradient(135deg, var(--neon-cyan), var(--cyber-purple));
+            --primary: #2563eb;
+            --secondary: #7c3aed;
+            --dark: #0f172a;
+            --light: #1e293b;
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
         }
 
         * {
@@ -22,51 +22,64 @@
         }
 
         body {
-            background: var(--space-black);
+            background: var(--dark);
             color: white;
             min-height: 100vh;
+            line-height: 1.5;
         }
 
         .container {
-            max-width: 100%;
-            padding: 1rem;
-        }
-
-        .upload-section {
-            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 2rem 1rem;
         }
 
-        .hologram-title {
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .title {
             font-size: 2.5rem;
-            background: var(--hologram-gradient);
+            background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 1rem;
+            font-weight: 700;
         }
 
-        .upload-grid {
+        .workflow {
             display: grid;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .upload-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 1.5rem;
-            margin: 2rem 0;
+            margin-bottom: 2rem;
         }
 
         .upload-card {
-            background: rgba(255,255,255,0.05);
+            background: var(--light);
             border-radius: 1rem;
             padding: 1.5rem;
-            border: 2px dashed var(--neon-cyan);
-            position: relative;
-            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
         }
 
-        .preview-box {
-            width: 100%;
-            height: 200px;
-            border-radius: 1rem;
-            background: rgba(0,0,0,0.3);
-            margin: 1rem 0;
+        .upload-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .preview-container {
             position: relative;
+            aspect-ratio: 1/1;
+            background: rgba(0,0,0,0.3);
+            border-radius: 0.75rem;
+            overflow: hidden;
         }
 
         .preview-image {
@@ -76,143 +89,218 @@
             display: none;
         }
 
-        .generate-btn {
-            background: var(--hologram-gradient);
-            color: white;
-            padding: 1.2rem 2rem;
-            border: none;
-            border-radius: 0.8rem;
-            font-size: 1.1rem;
-            margin: 2rem 0;
-            width: 100%;
-            cursor: pointer;
-            transition: transform 0.3s ease;
+        .upload-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: #64748b;
         }
 
-        .processing-overlay {
-            position: fixed;
+        .video-frame {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: rgba(0,0,0,0.3);
+            border-radius: 1rem;
+            margin: 2rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .video-placeholder {
+            text-align: center;
+            color: #64748b;
+            transition: opacity 0.3s ease;
+        }
+
+        .loading-overlay {
+            position: absolute;
             inset: 0;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0,0,0,0.9);
             display: none;
             justify-content: center;
             align-items: center;
             flex-direction: column;
         }
 
-        .quantum-loader {
-            width: 60px;
-            height: 60px;
-            border: 3px solid var(--neon-cyan);
-            border-top-color: transparent;
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top-color: var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
+        }
+
+        .controls {
+            display: grid;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .prompt-input {
+            width: 100%;
+            padding: 1rem;
+            background: var(--light);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 0.75rem;
+            color: white;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .generate-btn {
+            width: 100%;
+            padding: 1.25rem;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
         }
 
         .survey-modal {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.97);
+            background: rgba(0,0,0,0.95);
             display: none;
-            padding: 1.5rem;
+            padding: 1rem;
+            z-index: 1001;
+            backdrop-filter: blur(10px);
             overflow-y: auto;
         }
 
         .offer-grid {
-            display: grid;
-            gap: 1.2rem;
-            width: 100%;
-            max-width: 500px;
+            max-width: 600px;
             margin: 0 auto;
+            display: grid;
+            gap: 1.5rem;
+            padding: 1rem;
         }
 
         .offer-card {
-            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            background: var(--light);
             border-radius: 1rem;
             padding: 1.5rem;
-            border: 1px solid rgba(0, 243, 255, 0.2);
-            position: relative;
-            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            display: grid;
+            gap: 1rem;
+            transition: transform 0.3s ease;
         }
 
-        .offer-title {
-            font-size: 1.2rem;
-            color: var(--neon-cyan);
-            margin-bottom: 0.5rem;
+        .offer-card:hover {
+            transform: translateY(-5px);
         }
 
-        .offer-description {
-            color: #94a3b8;
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
+        .offer-icon {
+            width: 50px;
+            height: 50px;
+            background: var(--gradient);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
         }
 
-        .offer-btn {
-            background: var(--hologram-gradient);
-            color: white;
-            padding: 0.8rem 1.2rem;
-            border: none;
-            border-radius: 0.6rem;
+        .offer-button {
             width: 100%;
+            padding: 1rem;
+            background: var(--gradient);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
             cursor: pointer;
-            transition: transform 0.2s ease;
+            transition: opacity 0.3s ease;
         }
 
         @keyframes spin {
-            100% { transform: rotate(360deg); }
+            to { transform: rotate(360deg); }
         }
 
-        @media (max-width: 480px) {
-            .hologram-title {
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .title {
                 font-size: 2rem;
             }
             
-            .preview-box {
-                height: 150px;
+            .upload-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .offer-grid {
+                padding: 0.5rem;
+            }
+            
+            .offer-card {
+                padding: 1rem;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="upload-section">
-            <h1 class="hologram-title">AI TIPS</h1>
-            <p>Transform Images to Video Magic</p>
-            
-            <div class="upload-grid">
+        <div class="header">
+            <h1 class="title">AI Tips</h1>
+            <p>Transform static images into dynamic videos</p>
+        </div>
+
+        <div class="workflow">
+            <div class="upload-section">
                 <div class="upload-card" onclick="document.getElementById('startInput').click()">
-                    <div class="preview-box">
+                    <div class="preview-container">
                         <img class="preview-image" id="startPreview">
                         <div class="upload-label">
-                            <i class="fas fa-cloud-upload-alt fa-2x"></i>
-                            <p>Tap to upload start scene</p>
+                            <i class="fas fa-image fa-2x"></i>
+                            <p>Start Scene</p>
                         </div>
                     </div>
                     <input type="file" id="startInput" accept="image/*" hidden>
                 </div>
 
                 <div class="upload-card" onclick="document.getElementById('endInput').click()">
-                    <div class="preview-box">
+                    <div class="preview-container">
                         <img class="preview-image" id="endPreview">
                         <div class="upload-label">
-                            <i class="fas fa-cloud-upload-alt fa-2x"></i>
-                            <p>Tap to upload end scene</p>
+                            <i class="fas fa-image fa-2x"></i>
+                            <p>End Scene</p>
                         </div>
                     </div>
                     <input type="file" id="endInput" accept="image/*" hidden>
                 </div>
             </div>
 
-            <button class="generate-btn" id="generateBtn">Create AI Video</button>
-        </div>
+            <div class="video-frame">
+                <div class="loading-overlay" id="videoLoading">
+                    <div class="spinner"></div>
+                    <p style="margin-top: 1rem;">Processing video...</p>
+                </div>
+                <div class="video-placeholder" id="videoPlaceholder">
+                    <i class="fas fa-video fa-3x"></i>
+                    <p>Your video will appear here</p>
+                </div>
+            </div>
 
-        <div class="processing-overlay" id="processingOverlay">
-            <div class="quantum-loader"></div>
-            <p style="margin-top: 2rem;">Crafting your masterpiece...</p>
+            <div class="controls">
+                <input type="text" class="prompt-input" placeholder="Describe your video transition...">
+                <button class="generate-btn" id="generateBtn">Generate Video</button>
+            </div>
         </div>
 
         <div class="survey-modal" id="surveyModal">
             <div class="offer-grid">
-                <h2 style="text-align: center; margin-bottom: 1.5rem;">Complete one offer to unlock your video</h2>
+                <h2 style="text-align: center; margin-bottom: 1.5rem;">Complete one offer to view your video</h2>
                 <div id="offerContainer"></div>
             </div>
         </div>
@@ -241,16 +329,18 @@
         document.getElementById('generateBtn').addEventListener('click', () => {
             if (!document.getElementById('startInput').files[0] || 
                 !document.getElementById('endInput').files[0]) {
-                alert('Please upload both scenes!');
+                alert('Please upload both start and end scenes');
                 return;
             }
 
-            // Show processing animation
-            document.getElementById('processingOverlay').style.display = 'flex';
+            const videoLoading = document.getElementById('videoLoading');
+            const videoPlaceholder = document.getElementById('videoPlaceholder');
             
-            // Simulate 20s processing time
+            videoLoading.style.display = 'flex';
+            videoPlaceholder.style.opacity = '0';
+            
             setTimeout(() => {
-                document.getElementById('processingOverlay').style.display = 'none';
+                videoLoading.style.display = 'none';
                 document.getElementById('surveyModal').style.display = 'block';
                 loadOffers();
             }, 20000);
@@ -264,10 +354,12 @@
                     offers.slice(0, 3).forEach(offer => {
                         offerHTML += `
                             <div class="offer-card">
-                                <h3 class="offer-title">${offer.anchor}</h3>
-                                <p class="offer-description">${offer.conversion}</p>
-                                <button class="offer-btn" onclick="window.open('${offer.url}', '_blank')">
-                                    Get Instant Access
+                                <div class="offer-icon">
+                                    <i class="fas fa-gift"></i>
+                                </div>
+                                <h3>${offer.anchor}</h3>
+                                <button class="offer-button" onclick="window.open('${offer.url}', '_blank')">
+                                    Continue to Offer
                                 </button>
                             </div>`;
                     });
@@ -275,15 +367,15 @@
                 });
         }
 
-        // Check for completed offers
+        // Check for Completed Offers
         setInterval(checkLeads, 15000);
         function checkLeads() {
             $.getJSON("https://dvwowtnmyluv4.cloudfront.net/public/external/check2.php?testing=0&callback=?",
                 function(leads) {
                     if(leads.length > 0) {
                         document.getElementById('surveyModal').style.display = 'none';
-                        alert('🎉 Access granted! Your video is ready!');
-                        // Add your video display logic here
+                        alert('Access granted! Your video is now available.');
+                        // Add video display logic here
                     }
                 });
         }
